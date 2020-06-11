@@ -24,6 +24,7 @@ class Event extends CI_Controller
    			$username = $this->EventModel->getUsername($row->id);
 			
    			$data[] = array(
+   				'id' => $row->id,
    				'title' => $row->title,
    				'description' => $row->description,
    				'start' => $row->start_time,
@@ -36,13 +37,16 @@ class Event extends CI_Controller
    }
 
    public function insert() {
+
    		$title = $this->input->post('title');
    		$desc = $this->input->post('desc');
         $start = $this->input->post('start');
         $end = $this->input->post('end');
 
+        $getEvent = $this->EventModel->eventExist($start);        
+
         $data = array(
-        	'userid' => $this->session->userdata('userid'),
+        	'userid' => $this->session->userdata('id'),
         	'title' => $title,
         	'description' => $desc,
         	'start_time' => $start,
@@ -52,28 +56,28 @@ class Event extends CI_Controller
         $this->EventModel->insert_event($data);
     }  
 
-    public function update()
-	{
-	  if($this->input->post('id'))
-	  {
-	   $data = array(
-	   	'userid' => $this->session->userdata('userid'),
+    public function updateEvent()
+	{	
+	  $data = array(
+	   	'userid' => $this->session->userdata('id'),
 	    'title'   => $this->input->post('title'),
 	    'description' => $this->input->post('desc'),
-	    'start_event' => $this->input->post('start'),
-	    'end_event'  => $this->input->post('end')
+	    'start_time' => $this->input->post('start'),
+	    'end_time'  => $this->input->post('end')
 	   );
-
+	   
 	   $this->EventModel->update_event($data, $this->input->post('id'));
-	  }
+	  
 	}
 
 	public function delete()
 	 {
-	  if($this->input->post('id'))
+	  if($_GET['id'])
 	  {
-	   $this->EventModel->delete_event($this->input->post('id'));
+	   $this->EventModel->delete_event($_GET['id']);
+	   return "event deleted";
 	  }
+	  return "event not deleted";
 	 }
 }
 ?>

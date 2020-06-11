@@ -13,9 +13,14 @@
         <script>
             $(document).ready(function () {
                 $('#calendar').fullCalendar({
-                	minTime: '09:00:00', /* calendar start Timing */
-        			maxTime: '18:00:00',  /* calendar end Timing */
+                	minTime: '09:00',  // calendar start Timing 
+        			maxTime: '18:00',  // calendar end Timing
                 	editable: true,
+                	businessHours:{
+                		dow: [ 1, 2, 3, 4, 5 ],
+						start: '09:00', 
+						end: '18:00',               		
+                	},
                 	header: {
                 		left: 'prev,next,today',
                 		right: 'month,agendaWeek,agendaDay',
@@ -46,18 +51,18 @@
                     		}
                     	}
                     },
-                    editable:true,
 		            eventResize:function(event)
 		            {
 		                var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
 		                var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
 		                var title = event.title;
+		                var desc = event.description;
 		                var id = event.id;
 
 		                $.ajax({
-		                    url:"<?php echo base_url(); ?>event/update",
+		                    url: "<?php echo base_url(); ?>event/updateEvent",
 		                    type:"POST",
-		                    data:{title:title, desc:desc, start:start, end:end, id:id},
+		                    data:{title:title, start:start, end:end, id:id},
 		                    success:function()
 		                    {
 		                        $('#calendar').fullCalendar('refetchEvents');
@@ -67,16 +72,19 @@
 		            },
 		            eventDrop:function(event)
 		            {
+		            	console.log(event);
 		                var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
 		                var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
 		                var title = event.title;
+		                var desc = event.description;
 		                var id = event.id;
 		                $.ajax({
-		                    url:"<?php echo base_url(); ?>event/update",
+		                    url:"<?php echo base_url(); ?>event/updateEvent",
 		                    type:"POST",
 		                    data:{title:title, desc:desc, start:start, end:end, id:id},
-		                    success:function()
+		                    success:function(response)
 		                    {
+		                    	console.log(response);
 		                        $('#calendar').fullCalendar('refetchEvents');
 		                        alert("Event is updated");
 		                    }
@@ -84,14 +92,13 @@
 		            },
 		            eventClick:function(event)
 		            {
-		                if(confirm("Are you sure you want to remove it?"))
+		                if(confirm("Are you sure you want to remove it ?"))
 		                {
 		                    var id = event.id;
 		                    $.ajax({
-		                        url:"<?php echo base_url(); ?>event/delete",
-		                        type:"POST",
+		                        url:"<?php echo base_url(); ?>event/delete?id=1",
 		                        data:{id:id},
-		                        success:function()
+		                        success:function(response)
 		                        {
 		                            $('#calendar').fullCalendar('refetchEvents');
 		                            alert('Event has been removed');

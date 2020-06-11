@@ -23,15 +23,20 @@ class EventModel extends CI_Model
     }
 
     function update_event($data, $id)
-	 {
+	{
 	  $this->db->where('id', $id);
-	  $this->db->update('events', $data);
-	 }
+	  $updateEvent = $this->db->update('events', $data);
+	}
 
-	 function delete_event($id)
-	 {
+	function delete_event($id)
+	{
 	  $this->db->where('id', $id);
 	  $this->db->delete('events');
-	 }
+	}
+
+	function eventExist($stat){
+		
+
+	}
 }
 ?>
