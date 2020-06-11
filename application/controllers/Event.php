@@ -1,67 +1,79 @@
 <?php
 defined('BASEPATH') or die('No direct script access allowed');
 
-/**
- * 
- */
 class Event extends CI_Controller
 {	
 	    public function __construct() { 
         parent::__construct();          
         $this->load->model('EventModel'); 
+        $this->load->helper('form');
+        $this->load->library('session');
+        header('Access-Control-Allow-Origin: *');
+		header("Access-Control-Allow-Methods: POST, OPTIONS");
+		header("Access-Control-Allow-Headers: Content-Type, Content-Length, Accept-Encoding");
     } 
      
     public function index(){    
         $this->load->view('pages/Event'); 
     } 
      
-   public function get_event(){
+   public function loadEvents(){
    		$event_data = $this->EventModel->get_event();
 
    		foreach ($event_data as $row) {
+   			$username = $this->EventModel->getUsername($row->id);
+			
    			$data[] = array(
-   				'id' => $row['id'],
-   				'title' => $row['title'],
-   				'description' => $row['description'],
-   				'start_date' => $row['start_time'],
-   				'end_date' => $row['end_time'], 
+   				'title' => $row->title,
+   				'description' => $row->description,
+   				'start' => $row->start_time,
+   				'end' => $row->end_time, 
+   				'allDay' => false
    			);
-   		}
+		}
 
-   		echo json_encode($data);
+  		echo json_encode($data);
    }
 
-    public function get_eventing() {
+   public function insert() {
+   		$title = $this->input->post('title');
+   		$desc = $this->input->post('desc');
+        $start = $this->input->post('start');
+        $end = $this->input->post('end');
 
-        $start = $this->input->get("start");
-        $end = $this->input->get("end");
+        $data = array(
+        	'userid' => $this->session->userdata('userid'),
+        	'title' => $title,
+        	'description' => $desc,
+        	'start_time' => $start,
+        	'end_time' => $end, 
+        );
 
-        $startdt = new DateTime('now'); // setup a local datetime
-        $startdt->setTimestamp($start); // Set the date based on timestamp
-        $start_format = $startdt->format('Y-m-d H:i:s');
+        $this->EventModel->insert_event($data);
+    }  
 
-        $enddt = new DateTime('now'); // setup a local datetime
-        $enddt->setTimestamp($end); // Set the date based on timestamp
-        $end_format = $enddt->format('Y-m-d H:i:s');
+    public function update()
+	{
+	  if($this->input->post('id'))
+	  {
+	   $data = array(
+	   	'userid' => $this->session->userdata('userid'),
+	    'title'   => $this->input->post('title'),
+	    'description' => $this->input->post('desc'),
+	    'start_event' => $this->input->post('start'),
+	    'end_event'  => $this->input->post('end')
+	   );
 
-        $events = $this->main_model->get_events($start_format, $end_format);
+	   $this->EventModel->update_event($data, $this->input->post('id'));
+	  }
+	}
 
-        $data_events = array();
-
-        foreach ($events->result() as $r) {
-
-            $data_events[] = array(
-                "id" => $r->id,
-                "title" => $r->title,
-                "end_event" => $r->end_event,
-                "start_event" => $r->start_event
-            );
-        }
-
-
-        echo json_encode(array("events" =>$data_events));
-
-        exit();
-    }
+	public function delete()
+	 {
+	  if($this->input->post('id'))
+	  {
+	   $this->EventModel->delete_event($this->input->post('id'));
+	  }
+	 }
 }
 ?>
