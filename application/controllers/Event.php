@@ -43,8 +43,6 @@ class Event extends CI_Controller
         $start = $this->input->post('start');
         $end = $this->input->post('end');
 
-        $getEvent = $this->EventModel->eventExist($start);        
-
         $data = array(
         	'userid' => $this->session->userdata('id'),
         	'title' => $title,
@@ -68,6 +66,19 @@ class Event extends CI_Controller
 	   
 	   $this->EventModel->update_event($data, $this->input->post('id'));
 	  
+	}
+
+	public function findEvent(){
+		$start = $this->input->post('start');
+        $startTime = explode(' ', $start);
+        $getEvent = $this->EventModel->eventExist($startTime[0]);        
+
+        if (!empty($getEvent)) {
+        	echo 0;
+        }
+        else {
+        	echo 1;
+        }
 	}
 
 	public function delete()

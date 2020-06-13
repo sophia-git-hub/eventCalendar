@@ -34,9 +34,10 @@ class EventModel extends CI_Model
 	  $this->db->delete('events');
 	}
 
-	function eventExist($stat){
-		
-
+	function eventExist($start){
+		$this->db->select('*')->from('events')->like('start_time', $start);
+		$event = $this->db->get();
+    	return $event->result_array();
 	}
 }
 ?>

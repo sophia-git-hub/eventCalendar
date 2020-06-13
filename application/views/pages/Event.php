@@ -31,25 +31,41 @@
 		            selectable:true,
 		            selectHelper:true,
                     select: function(start,end,allDay){
-                    	var title = prompt("Enter Event title");                   	
+                    	var start = $.fullCalendar.formatDate(start,"Y-MM-DD HH:mm::ss");
 
-                    	if(title){
-                    		var desc = prompt("Enter Event description");
-                    		if(desc){
-                    			var start = $.fullCalendar.formatDate(start,"Y-MM-DD HH:mm::ss");
-                    			var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH::mm:ss");
+                    	$.ajax({
+                    		url: "<?php echo base_url();?>event/findEvent",
+                    		type: "POST",
+                    		data: {start:start},
+                    		success: function(response){
+                    			if(response == 0){
+                    				alert('An event already exists for this date');
+                    			}
+                    			else{
+		                    		var title = prompt("Enter Event title");  
+			                    	if(title){
+			                    		var desc = prompt("Enter Event description");
+			                    		if(desc){
+			                    			var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH::mm:ss");
 
-	                    		$.ajax({
-	                    			url: "<?php echo base_url();?>event/insert",
-	                    			type: "POST",
-	                    			data: {title:title,desc:desc,start:start,end:end},
-	                    			success: function(){
-	                    				$('#calendar').fullCalendar('refetchEvents');
-	                    				alert('Event has been added successfully');
-	                    			}	                    			
-	                    		});
-                    		}
-                    	}
+				                    		$.ajax({
+				                    			url: "<?php echo base_url();?>event/insert",
+				                    			type: "POST",
+				                    			data: {title:title,desc:desc,start:start,end:end},
+				                    			success: function(response){
+				                    				alert(response);
+				                    				$('#calendar').fullCalendar('refetchEvents');
+				                    				alert('Event has been added successfully');
+				                    			}	                    			
+				                    		});
+			                    		}
+			                    	}
+		                    	}
+		                    },
+		                    error: function(response){
+		                    	alert('An event already exists for this date');
+		                    }
+                    	});
                     },
 		            eventResize:function(event)
 		            {
