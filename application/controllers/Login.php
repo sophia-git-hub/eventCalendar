@@ -62,7 +62,7 @@ class Login extends CI_Controller
 		$this->index();
 	}
 
-	function userRegister(){
+	public function userRegister(){
 
 		$this->form_validation->set_rules('fname', 'fname', 'required');
 		$this->form_validation->set_rules('lname', 'lname', 'required');
@@ -70,8 +70,12 @@ class Login extends CI_Controller
 		$this->form_validation->set_rules('age', 'age', 'required');
 		$this->form_validation->set_rules('username', 'username', 'required');
 		$this->form_validation->set_rules('password', 'password', 'required');
+		$this->form_validation->set_rules('rePassword', 'rePassword', 'required');
 
 		if ($this->form_validation->run()){
+
+			if($this->input->post('password') === $this->input->post('rePassword')){
+
 			$pnumber = $this->input->post('pnumber');
 			$username = $this->input->post('username');
 
@@ -102,7 +106,7 @@ class Login extends CI_Controller
 				{
 					echo "<h5 style='color:green;text-align:center;'>User ".$this->input->post('fname')." ".$this->input->post('lname').". has been registered successfully.</h5>";
 					echo "<h6 style='color:green;text-align:center;'>Please Login to create an event</h6>";
-					$this->index();
+					redirect(base_url());
 					exit();
 				}
 				else{
@@ -110,8 +114,16 @@ class Login extends CI_Controller
 				}
 			}			
 		}
-		
-		$this->userReg();
+		else
+		{
+			echo "<h5 style='color:red;text-align:center;'>Passwords do not match</h5>";
+		}
+	}
+	else
+	{
+		echo "<h5 style='color:red;text-align:center;'>Please fill all the fields before you submit the form</h5>";
+	}
+	$this->userReg();
 	}	
 }
 ?>

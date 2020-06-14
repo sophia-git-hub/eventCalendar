@@ -11,7 +11,7 @@ class LoginModel extends CI_Model
 
 	public function validate($username,$userpassword){
 		$user = $this->db->get_where('users', array('username' => $username))->row();
-		if($user->password == md5($userpassword))
+		if(!empty($user) && $user->password == md5($userpassword))
 		{
 			return $user;
 		}

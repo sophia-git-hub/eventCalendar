@@ -27,6 +27,10 @@ $this->load->view('templates/header');
     	<label for="exampleInputPassword1">Password</label>
     	<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
   	</div>
+    <div class="form-group">
+      <label for="exampleInputPassword1">Re-enter Password</label>
+      <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Re-enter Password" name="rePassword">
+    </div>
   	<div class="form-check">
     	<input type="checkbox" class="form-check-input" id="exampleCheck1" name="rememberMe">
     	<label class="form-check-label" for="exampleCheck1">Remember me</label>

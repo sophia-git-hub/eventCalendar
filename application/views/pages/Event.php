@@ -42,24 +42,24 @@
                     				alert('An event already exists for this date');
                     			}
                     			else{
-		                    		var title = prompt("Enter Event title");  
-			                    	if(title){
-			                    		var desc = prompt("Enter Event description");
-			                    		if(desc){
-			                    			var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH::mm:ss");
+	                    		var title = prompt("Enter Event title");  
+		                    	if(title){
+		                    		var desc = prompt("Enter Event description");
+		                    		if(desc){
+		                    			var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH::mm:ss");
 
-				                    		$.ajax({
-				                    			url: "<?php echo base_url();?>event/insert",
-				                    			type: "POST",
-				                    			data: {title:title,desc:desc,start:start,end:end},
-				                    			success: function(response){
-				                    				alert(response);
-				                    				$('#calendar').fullCalendar('refetchEvents');
-				                    				alert('Event has been added successfully');
-				                    			}	                    			
-				                    		});
-			                    		}
-			                    	}
+			                    		$.ajax({
+			                    			url: "<?php echo base_url();?>event/insert",
+			                    			type: "POST",
+			                    			data: {title:title,desc:desc,start:start,end:end},
+			                    			success: function(response){
+			                    				alert(response);
+			                    				$('#calendar').fullCalendar('refetchEvents');
+			                    				alert('Event has been added successfully');
+			                    			}	                    			
+			                    		});
+		                    		}
+		                    	}
 		                    	}
 		                    },
 		                    error: function(response){
@@ -128,9 +128,11 @@
     </head>
     <body>
     	<br>
-    	<div align="right">
-    		<h6><b>Hello, <?php echo $this->session->userdata('fname').' '.$this->session->userdata('lname');?></b></h6>
-    		<a class="btn btn-primary" href="<?php echo base_url();?>LogOut">Sign Out</a>
+    	<div>
+    		<h6 style="float:left;"><b>Hello, <?php echo $this->session->userdata('fname').' '.$this->session->userdata('lname');?></b>
+    			<a href="<?php echo base_url();?>Profile"><br>Edit Profile</a>
+    		</h6>
+    		<a class="btn btn-primary" style="float:right;" href="<?php echo base_url();?>LogOut">Sign Out</a>
     	</div>
     	<h2 align="center"> Event Calendar </h2>
         <div class="container">

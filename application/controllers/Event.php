@@ -11,6 +11,10 @@ class Event extends CI_Controller
         header('Access-Control-Allow-Origin: *');
 		header("Access-Control-Allow-Methods: POST, OPTIONS");
 		header("Access-Control-Allow-Headers: Content-Type, Content-Length, Accept-Encoding");
+
+		if(!$this->session->userdata('username')){
+			redirect(base_url().'Login');
+		}
     } 
      
     public function index(){    
